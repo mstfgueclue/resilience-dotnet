@@ -4,7 +4,7 @@ using ResilientApi.Data.Models;
 using ResilientApi.Data.Repositories;
 using Xunit.Abstractions;
 
-namespace ResilientApi.Test;
+namespace ResilientApi.Tests.UnitTests;
 
 public class OwnerRepositoryTests(ITestOutputHelper output) : BaseTests(output)
 {

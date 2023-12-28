@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ResilientApi.Data;
 using Xunit.Abstractions;
 
-namespace ResilientApi.Test;
+namespace ResilientApi.Tests.UnitTests;
 
 public class BaseTests(ITestOutputHelper output)
 {
