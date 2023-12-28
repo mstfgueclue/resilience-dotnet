@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{25CD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResilientApiGateway.Data", "ResilientApiGateway.Data\ResilientApiGateway.Data.csproj", "{7B57D751-2313-4DD1-81E1-4029D007B4F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResilientApi.Test", "ResilientApi.Test\ResilientApi.Test.csproj", "{87F5B017-11B0-4404-85FC-BA66C60BA9A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResilientApi.Tests", "ResilientApi.Tests\ResilientApi.Tests.csproj", "{87F5B017-11B0-4404-85FC-BA66C60BA9A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
