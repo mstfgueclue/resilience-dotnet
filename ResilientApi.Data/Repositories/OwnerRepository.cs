@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ResilientApi.Data.Exceptions;
 using ResilientApi.Data.Models;
 
 namespace ResilientApi.Data.Repositories;
@@ -69,7 +70,7 @@ public class OwnerRepository : BaseRepository, IOwnerRepository
         var owner = await _dbContext.Owners.FindAsync(id);
         if (owner == null)
         {
-            throw new Exception($"Owner with id {id} not found");
+            throw new NotFoundException($"Owner with id {id} not found");
         }
         
         return owner;
@@ -84,7 +85,7 @@ public class OwnerRepository : BaseRepository, IOwnerRepository
             .FirstOrDefaultAsync(o => o.Id == id);
         if (owner == null)
         {
-            throw new Exception($"Owner with id {id} not found");
+            throw new NotFoundException($"Owner with id {id} not found");
         }
         
         return owner;
@@ -96,7 +97,7 @@ public class OwnerRepository : BaseRepository, IOwnerRepository
         
         if (owner == null)
         {
-            throw new ArgumentException("owner cannot be null");
+            throw new BadRequestException("owner cannot be null");
         }
 
         owner.Id = _nextId++;
@@ -112,13 +113,13 @@ public class OwnerRepository : BaseRepository, IOwnerRepository
         
         if (owner == null)
         {
-            throw new ArgumentException("owner cannot be null");
+            throw new BadRequestException("owner cannot be null");
         }
 
         var foundOwner = await _dbContext.Owners.FindAsync(owner.Id);
         if (foundOwner == null)
         {
-            throw new Exception($"Owner with id {owner.Id} not found");
+            throw new NotFoundException($"Owner with id {owner.Id} not found");
         }
 
         foundOwner.Name = owner.Name;
@@ -140,7 +141,7 @@ public class OwnerRepository : BaseRepository, IOwnerRepository
         var foundOwner = await _dbContext.Owners.FindAsync(owner.Id);
         if (foundOwner == null)
         {
-            throw new Exception($"Owner with id {owner.Id} not found");
+            throw new NotFoundException($"Owner with id {owner.Id} not found");
         }
 
         _dbContext.Owners.Remove(foundOwner);

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ResilientApi.Data.Exceptions;
 using ResilientApi.Data.Models;
 
 namespace ResilientApi.Data.Repositories;
@@ -92,7 +93,7 @@ public class CarRepository : BaseRepository, ICarRepository
         var foundCar = await _dbContext.Cars.FirstOrDefaultAsync(c => c.Id == id);
         if (foundCar == null)
         {
-            throw new Exception($"Car with id {id} not found");
+            throw new NotFoundException($"Car with id {id} not found");
         }
 
         return foundCar;
@@ -104,7 +105,7 @@ public class CarRepository : BaseRepository, ICarRepository
 
         if (car == null)
         {
-            throw new ArgumentException("car cannot be null");
+            throw new BadRequestException("car cannot be null");
         }
 
         car.Id = _nextId++;
@@ -121,7 +122,7 @@ public class CarRepository : BaseRepository, ICarRepository
         var foundCar = await _dbContext.Cars.FirstOrDefaultAsync(c => c.Id == id);
         if (foundCar == null)
         {
-            throw new Exception($"Car with id {id} not found");
+            throw new NotFoundException($"Car with id {id} not found");
         }
 
         _dbContext.Cars.Remove(foundCar);
@@ -135,7 +136,7 @@ public class CarRepository : BaseRepository, ICarRepository
         var foundCar = await _dbContext.Cars.FirstOrDefaultAsync(c => c.Id == car.Id);
         if (foundCar == null)
         {
-            throw new Exception($"Car with id {car.Id} not found");
+            throw new NotFoundException($"Car with id {car.Id} not found");
         }
 
         foundCar.Make = car.Make;
@@ -156,13 +157,13 @@ public class CarRepository : BaseRepository, ICarRepository
         var foundCar = await _dbContext.Cars.FirstOrDefaultAsync(c => c.Id == carId);
         if (foundCar == null)
         {
-            throw new Exception($"Car with id {carId} not found");
+            throw new NotFoundException($"Car with id {carId} not found");
         }
 
         var foundOwner = await _dbContext.Owners.FirstOrDefaultAsync(o => o.Id == ownerId);
         if (foundOwner == null)
         {
-            throw new Exception($"Owner with id {ownerId} not found");
+            throw new NotFoundException($"Owner with id {ownerId} not found");
         }
 
         foundCar.OwnerId = foundOwner.Id;
