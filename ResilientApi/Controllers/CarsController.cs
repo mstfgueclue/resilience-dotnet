@@ -20,6 +20,11 @@ public class CarsController(ICarRepository carRepository) : Controller
     [HttpGet("{id}/with-random-error")]
     public async Task<IActionResult> GetCarWithRandomError(int id)
     {
+        if (id == -1)
+        {
+            throw new Exception("[manually triggered] Something went wrong]");
+        }
+        
         await Task.Delay(2000); // simulate a long running request
         
         // trigger a random error
