@@ -12,6 +12,6 @@ public class Car
     public DateTime DateCreated { get; set; }
     public DateTime DateUpdated { get; set; }
     
-    public int OwnerId { get; set; }
-    public Owner Owner { get; set; }
+    public int? OwnerId { get; set; }
+    public Owner? Owner { get; set; }
 }
