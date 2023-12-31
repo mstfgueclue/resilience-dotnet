@@ -4,9 +4,9 @@ namespace ResilientApi.Data;
 
 public class DatabaseSeeder(ICarRepository carRepository, IOwnerRepository ownerRepository)
 {
-    public void Seed()
+    public async Task Seed()
     {
-        carRepository.GetAllCarsAsync().Wait();
-        ownerRepository.GetAllOwnersAsync().Wait();
+        await carRepository.GetAllCarsAsync();
+        await ownerRepository.GetAllOwnersAsync();
     }
 }

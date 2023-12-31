@@ -19,14 +19,11 @@ builder.Services.AddDbContext<DataContext>(options => options.UseInMemoryDatabas
 
 var app = builder.Build();
 
-// Access repositories to ensure seeding
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    
     // Access the DatabaseSeeder and trigger the seeding
-    var seederService = services.GetRequiredService<DatabaseSeeder>();
-    seederService.Seed();
+    var seederService = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+    await seederService.Seed();
 }
 
 // Configure the HTTP request pipeline.
