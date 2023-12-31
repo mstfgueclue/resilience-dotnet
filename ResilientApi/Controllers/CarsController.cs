@@ -17,8 +17,8 @@ public class CarsController(ICarRepository carRepository) : Controller
     }
     
     // GET api/cars/5
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    [HttpGet("{id}/with-random-error")]
+    public async Task<IActionResult> GetCarWithRandomError(int id)
     {
         await Task.Delay(2000); // simulate a long running request
         
@@ -28,9 +28,17 @@ public class CarsController(ICarRepository carRepository) : Controller
         Console.WriteLine($"random number: {randomNumber}");
         if (randomNumber % 2 == 0)
         {
-            return StatusCode(500, "Something went wrong");
+            throw new Exception("Something went wrong");
         }
         
+        var car = await carRepository.GetCarByIdAsync(id);
+        return Ok(car);
+    }
+    
+    // GET api/cars/5
+    [HttpGet("{id}", Name = "GetCarById")]
+    public async Task<IActionResult> Get(int id)
+    {
         var car = await carRepository.GetCarByIdAsync(id);
         return Ok(car);
     }

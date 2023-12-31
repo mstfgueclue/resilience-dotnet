@@ -35,7 +35,7 @@ public class CarsController : Controller
     public async Task<IActionResult> GetFallback(int id, CancellationToken cancellationToken)
     {
         var response = await _clientStrategies.Fallback.ExecuteAsync(
-            async innerToken => await _client.GetAsync($"api/cars/{id}", innerToken), cancellationToken);
+            async innerToken => await _client.GetAsync($"api/cars/{id}/with-random-error", innerToken), cancellationToken);
         
         return await _apiRequestService.HandleResponseAsync<Car>(response, cancellationToken);
     }
@@ -45,7 +45,7 @@ public class CarsController : Controller
     public async Task<IActionResult> GetWaitAndRetry(int id, CancellationToken cancellationToken)
     {
         var response = await _clientStrategies.WaitAndRetry.ExecuteAsync(
-            async innerToken => await _client.GetAsync($"api/cars/{id}", innerToken), cancellationToken);
+            async innerToken => await _client.GetAsync($"api/cars/{id}/with-random-error", innerToken), cancellationToken);
         
         return await _apiRequestService.HandleResponseAsync<Car>(response, cancellationToken);
     }
@@ -55,7 +55,7 @@ public class CarsController : Controller
     public async Task<IActionResult> GetTimeout(int id, CancellationToken cancellationToken)
     {
         var response = await _clientStrategies.Timeout.ExecuteAsync(
-            async innerToken => await _client.GetAsync($"api/cars/{id}", innerToken), cancellationToken);
+            async innerToken => await _client.GetAsync($"api/cars/{id}/with-random-error", innerToken), cancellationToken);
         
         return await _apiRequestService.HandleResponseAsync<Car>(response, cancellationToken);
     }
