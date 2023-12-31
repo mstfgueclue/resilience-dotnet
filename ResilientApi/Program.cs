@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ResilientApi.Data;
 using ResilientApi.Data.Repositories;
+using ResilientApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +13,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<DatabaseSeeder>();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
 builder.Services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("CarsDb"));
 
 var app = builder.Build();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
