@@ -59,4 +59,15 @@ public class CarsController : Controller
         
         return await _apiRequestService.HandleResponseAsync<Car>(response, cancellationToken);
     }
+    
+    // an endpoint for the circuit breaker strategy
+    // GET api/cars/5
+    [HttpGet("{id}/circuit-breaker")]
+    public async Task<IActionResult> GetCircuitBreaker(int id, CancellationToken cancellationToken)
+    {
+        var response = await _clientStrategies.CircuitBreakerCombo.ExecuteAsync(
+            async innerToken => await _client.GetAsync($"api/cars/{id}/with-random-error", innerToken), cancellationToken);
+        
+        return await _apiRequestService.HandleResponseAsync<Car>(response, cancellationToken);
+    }
 }

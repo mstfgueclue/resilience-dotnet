@@ -11,18 +11,20 @@ public class ClientStrategies
     private RetryStrategyOptions<HttpResponseMessage> RetryStrategy { get; }
     private CircuitBreakerStrategyOptions<HttpResponseMessage> CircuitBreakerStrategy { get; }
     private FallbackStrategyOptions<HttpResponseMessage> FallbackStrategy { get; }
+    private FallbackStrategyOptions<HttpResponseMessage> FallbackCircuitStrategy { get; }
     private TimeoutStrategyOptions TimeoutStrategy { get; }
-    
+
     // Reactive Strategies
     public ResiliencePipeline<HttpResponseMessage> WaitAndRetry { get; set; }
     public ResiliencePipeline<HttpResponseMessage> CircuitBreaker { get; set; }
     public ResiliencePipeline<HttpResponseMessage> Fallback { get; set; }
-    
+
     // Proactive Strategies
     public ResiliencePipeline<HttpResponseMessage> Timeout { get; set; }
-    
-    // All Strategies
+
+    // Mixed Strategies
     public ResiliencePipeline<HttpResponseMessage> All { get; set; }
+    public ResiliencePipeline<HttpResponseMessage> CircuitBreakerCombo { get; set; }
 
 
     public ClientStrategies(HttpClient client )
@@ -78,7 +80,23 @@ public class ClientStrategies
                     ? $"Fallback after {(int)args.Outcome.Result.StatusCode}: {args.Outcome.Result.ReasonPhrase}"
                     : $"Fallback after {args.Outcome.Exception?.Message}";
                 Console.WriteLine(fallBackMessage);
-                
+
+                var response = await client.GetAsync("api/cars/2");
+                return Outcome.FromResult(response);
+            }
+        };
+
+        FallbackCircuitStrategy = new FallbackStrategyOptions<HttpResponseMessage>
+        {
+            ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
+                .Handle<BrokenCircuitException>(), // notice that this strategy only handles BrokenCircuitException
+            FallbackAction = async args =>
+            {
+                var fallBackMessage = args.Outcome.Result != null
+                    ? $"Fallback after {(int)args.Outcome.Result.StatusCode}: {args.Outcome.Result.ReasonPhrase}"
+                    : $"Fallback after {args.Outcome.Exception?.Message}";
+                Console.WriteLine(fallBackMessage);
+
                 var response = await client.GetAsync("api/cars/2");
                 return Outcome.FromResult(response);
             }
@@ -109,6 +127,15 @@ public class ClientStrategies
             .AddCircuitBreaker(CircuitBreakerStrategy)
             .AddTimeout(TimeoutStrategy)
             .AddFallback(FallbackStrategy)
+            .Build();
+
+        // The strategies are executed in the order they are added to the pipeline
+        // e.g. 1. Retry, 2. Fallback, 3. Circuit Breaker
+        // if 2. Circuit Breaker and 3. Fallback then it would not catch the BrokenCircuitException
+        CircuitBreakerCombo = new ResiliencePipelineBuilder<HttpResponseMessage>()
+            .AddRetry(RetryStrategy)
+            .AddFallback(FallbackCircuitStrategy)
+            .AddCircuitBreaker(CircuitBreakerStrategy)
             .Build();
     }
 }
