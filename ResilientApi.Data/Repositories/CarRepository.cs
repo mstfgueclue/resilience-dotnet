@@ -14,10 +14,15 @@ public class CarRepository : BaseRepository, ICarRepository
     {
         _logger = logger;
         _dbContext = dbContext;
-
+        
+        SeedDatabaseAsync().Wait();
+    }
+    
+    private async Task SeedDatabaseAsync()
+    {
         if (_dbContext.Cars.Any()) return;
 
-        _logger.LogInformation($"Seeding the database with sample data.");
+        _logger.LogInformation($"Seeding the database with sample car data");
         var cars = new List<Car>
         {
             new()
@@ -67,7 +72,7 @@ public class CarRepository : BaseRepository, ICarRepository
         };
         _nextId = cars.Count;
         _dbContext.Cars.AddRange(cars);
-        _dbContext.SaveChanges();
+        await SaveChangesAsync();
     }
 
     public async Task<List<Car?>> GetAllCarsAsync()

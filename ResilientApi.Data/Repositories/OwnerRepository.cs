@@ -14,10 +14,15 @@ public class OwnerRepository : BaseRepository, IOwnerRepository
     {
         _logger = logger;
         _dbContext = dbContext;
-
+        
+        SeedDatabaseAsync().Wait();
+    }
+    
+    private async Task SeedDatabaseAsync()
+    {
         if (_dbContext.Owners.Any()) return;
 
-        _logger.LogInformation($"Seeding the database with sample data.");
+        _logger.LogInformation($"Seeding the database with sample owner data");
         var owners = new List<Owner>
         {
             new()
@@ -47,7 +52,7 @@ public class OwnerRepository : BaseRepository, IOwnerRepository
         };
         _nextId = owners.Count;
         _dbContext.Owners.AddRange(owners);
-        _dbContext.SaveChanges();
+        await SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Owner>> GetAllOwnersAsync()
