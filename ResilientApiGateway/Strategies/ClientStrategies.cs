@@ -68,6 +68,11 @@ public class ClientStrategies
                 Console.WriteLine($"Circuit opened. Delay: {args.BreakDuration} seconds.");
                 return default;
             },
+            OnHalfOpened = static _ =>
+            {
+                Console.WriteLine($"Circuit half-opened. Next call is a trial.");
+                return default;
+            },
         };
 
         FallbackStrategy = new FallbackStrategyOptions<HttpResponseMessage>
