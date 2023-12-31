@@ -27,19 +27,20 @@ public class ClientStrategies
     public ResiliencePipeline<HttpResponseMessage> CircuitBreakerCombo { get; set; }
 
 
-    public ClientStrategies(HttpClient client )
+    public ClientStrategies(HttpClient client)
     {
+        // BackoffType = DelayBackoffType.Constant states that the delay between retries will be constant e.g. 1s, 1s, 1s
         RetryStrategy = new RetryStrategyOptions<HttpResponseMessage>
         {
             Delay = TimeSpan.FromSeconds(1),
-            MaxRetryAttempts = 3,
+            MaxRetryAttempts = 10,
             BackoffType = DelayBackoffType.Constant,
             ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
                 .Handle<Exception>()
                 .HandleResult(static result => !result.IsSuccessStatusCode),
             OnRetry = static args =>
             {
-                Console.WriteLine($"Retrying {args.AttemptNumber+1} of 3");
+                Console.WriteLine($"Retrying {args.AttemptNumber + 1} of 10");
                 Console.WriteLine($"Delay is set to {args.RetryDelay} second");
                 return default;
             }
@@ -55,6 +56,9 @@ public class ClientStrategies
             }
         };
 
+        // FailureRatio = 0.2 states that the circuit will open if 20% of the requests in the sampling duration fail
+        // MinimumThroughput = 3 stands for the minimum number of requests in the sampling duration that must be made before the circuit can be opened
+        // SamplingDuration = 10 seconds states that the circuit will open if the above conditions are met in a 10 second window
         CircuitBreakerStrategy = new CircuitBreakerStrategyOptions<HttpResponseMessage>
         {
             SamplingDuration = TimeSpan.FromSeconds(10),
