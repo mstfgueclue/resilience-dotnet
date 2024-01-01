@@ -1,5 +1,6 @@
 # Getting Started
 This project demonstrates how to implement a resilient API using the `Polly` library. Below is an overview of the project structure.
+![ResilientApi-Architecture](https://github.com/mstfgueclue/resilience-dotnet/assets/64474817/1a4e3fa2-568d-4951-96b3-a025e0abd012)
 
 ## How to Run
 1. Clone the repository.
@@ -22,6 +23,7 @@ The project `ResilientApiGateway` is the main project that contains the client i
 The project is a `ASP.NET Core Web Api (8.0 Framework)` that can be run locally. `ResilientApiGateway` communicates with the `ResilientApi` project to perform READ operations on the `Car` entity to demonstrate the resilience of the system.
 
 ### Swagger UI (API Documentation)
+![2024-01-01_17-08-46](https://github.com/mstfgueclue/resilience-dotnet/assets/64474817/1fd87aad-cd06-43e5-885a-340890be148f)
 
 ## ResilientApi
 The project `ResilientApi` is the main project that contains the REST API implementation. 
@@ -30,5 +32,6 @@ There is one specific endpoint that is used by the `ResilientApiGateway` project
 It is the `GET: api/cars/{id}/-with-random-error` endpoint for the `Car` entity.
 
 ### Swagger UI (API Documentation)
+![2024-01-01_17-08-33](https://github.com/mstfgueclue/resilience-dotnet/assets/64474817/a02f1d55-a135-490b-b145-289763896310)
 
 ---
